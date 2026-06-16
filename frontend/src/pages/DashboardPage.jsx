@@ -20,7 +20,7 @@ export function DashboardPage({ stats, loading }) {
         <MetricCard label="证照总数" value={stats?.total_licenses} />
         <MetricCard label="即将到期" value={stats?.expiring_licenses} tone="warning" />
         <MetricCard label="已到期" value={stats?.expired_licenses} tone="danger" />
-        <MetricCard label="逾期未还" value={stats?.overdue_returns} tone="danger" />
+        <MetricCard label="借出中" value={stats?.borrowed_records} />
       </div>
 
       <div className="content-grid two-col">
