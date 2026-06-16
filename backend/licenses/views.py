@@ -66,8 +66,9 @@ def stats_view(_request):
     stats = dashboard_stats()
     return Response(
         {
-            **{key: value for key, value in stats.items() if key not in {"upcoming_expiries", "expired"}},
+            **{key: value for key, value in stats.items() if key not in {"upcoming_expiries", "expired", "all_licenses"}},
             "upcoming_expiries": LicenseSerializer(stats["upcoming_expiries"], many=True).data,
             "expired": LicenseSerializer(stats["expired"], many=True).data,
+            "all_licenses": LicenseSerializer(stats["all_licenses"], many=True).data,
         }
     )
