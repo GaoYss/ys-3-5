@@ -35,6 +35,8 @@ export function StatsPage({ stats }) {
     return ticks
   }, [maxCrossValue])
 
+  const yAxisMax = yAxisTicks[yAxisTicks.length - 1] || 1
+
   const filteredLicenses = useMemo(() => {
     if (!filterType && !filterDept) return allLicenses
     return allLicenses.filter((item) => {
@@ -169,36 +171,46 @@ export function StatsPage({ stats }) {
                   {[...yAxisTicks].reverse().map((tick) => (
                     <div className="y-tick" key={tick}>
                       <span className="y-tick-label">{tick}</span>
-                      <span className="y-grid-line" />
                     </div>
                   ))}
                 </div>
-                <div className="cross-chart-cols">
-                  {departments.map((dept) => (
-                    <div className="cross-chart-col" key={dept}>
-                      <div className="cross-bars">
-                        {crossMatrix.map((row) => {
-                          const value = row[dept] || 0
-                          const heightPct = (value / maxCrossValue) * 100
-                          return (
-                            <div className="cross-bar-wrap" key={row.license_type}>
-                              <div
-                                className="cross-bar"
-                                style={{
-                                  height: `${Math.max(heightPct, value > 0 ? 4 : 0)}%`,
-                                  background: typeColorMap[row.license_type] || '#64748b',
-                                }}
-                                title={`${getTypeLabel(row.license_type)}: ${value}`}
-                              >
-                                {value > 0 && <span>{value}</span>}
+                <div className="cross-plot-area">
+                  <div className="cross-grid">
+                    {yAxisTicks.map((tick, i) => (
+                      <span
+                        className="grid-line"
+                        key={tick}
+                        style={{ bottom: `${(tick / yAxisMax) * 100}%` }}
+                      />
+                    ))}
+                  </div>
+                  <div className="cross-chart-cols">
+                    {departments.map((dept) => (
+                      <div className="cross-chart-col" key={dept}>
+                        <div className="cross-bars">
+                          {crossMatrix.map((row) => {
+                            const value = row[dept] || 0
+                            const heightPct = (value / yAxisMax) * 100
+                            return (
+                              <div className="cross-bar-wrap" key={row.license_type}>
+                                <div
+                                  className="cross-bar"
+                                  style={{
+                                    height: `${Math.max(heightPct, value > 0 ? 2 : 0)}%`,
+                                    background: typeColorMap[row.license_type] || '#64748b',
+                                  }}
+                                  title={`${getTypeLabel(row.license_type)}: ${value}`}
+                                >
+                                  {value > 0 && <span>{value}</span>}
+                                </div>
                               </div>
-                            </div>
-                          )
-                        })}
+                            )
+                          })}
+                        </div>
+                        <div className="cross-chart-label">{dept}</div>
                       </div>
-                      <div className="cross-chart-label">{dept}</div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
               <div className="cross-legend">
